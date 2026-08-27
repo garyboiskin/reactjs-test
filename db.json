@@ -1,0 +1,85 @@
+{
+  "employees": [
+    {
+      "id": "3",
+      "name": "Terry Johnson",
+      "email": "michael.johnson@example.com",
+      "department": "Sales",
+      "position": "Sales Executive",
+      "salary": 851112
+    },
+    {
+      "id": "4",
+      "name": "Sarah Williams",
+      "email": "sarah.williams@example.com",
+      "department": "HR",
+      "position": "HR Manager",
+      "salary": 90000
+    },
+    {
+      "id": "5",
+      "name": "David Brown",
+      "email": "david.brown@example.com",
+      "department": "Finance",
+      "position": "Financial Analyst",
+      "salary": 88000
+    },
+    {
+      "id": "6",
+      "name": "Emily Davis",
+      "email": "emily.davis@example.com",
+      "department": "Engineering",
+      "position": "Frontend Developer",
+      "salary": 105000
+    },
+    {
+      "name": "Test User",
+      "email": "test@example.com",
+      "department": "Engineering",
+      "position": "Developer",
+      "salary": 100000,
+      "id": "ybeEZMtFydE"
+    },
+    {
+      "name": "fff",
+      "email": "fff@hhh.com",
+      "department": "Marketing",
+      "position": "sss",
+      "salary": 222,
+      "id": "Taxnvcq112Q"
+    },
+    {
+      "name": "ddd",
+      "email": "ddd@dd.com",
+      "department": "Sales",
+      "position": "dddd",
+      "salary": 333,
+      "id": "TDUynZgbSWw"
+    },
+    {
+      "name": "ddd",
+      "email": "ddd@dd.com",
+      "department": "Sales",
+      "position": "dddd",
+      "salary": 333,
+      "id": "49jZb-YObn0"
+    },
+    {
+      "name": "ddd",
+      "email": "ddd@gmail.com",
+      "department": "Engineering",
+      "position": "dev",
+      "salary": 20000,
+      "id": "8kWNw5UV3k0"
+    },
+    {
+      "name": "Gary Doe",
+      "email": "garyboe@gmail.com",
+      "department": "Engineering",
+      "position": "Dev",
+      "salary": 200000,
+      "id": "StRnu2dwOyU"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -1,0 +1,26 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      mock-api:
+        condition: service_healthy
+
+  mock-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.mock
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/data
+    command: ["json-server", "/data/db.json", "--port", "3000"]
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/employees"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s

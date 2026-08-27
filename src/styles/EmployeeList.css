@@ -1,0 +1,68 @@
+.employee-list-container {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.employee-list-container h2 {
+  margin: 0;
+  padding: 16px 24px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  font-size: 16px;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.employee-table thead {
+  background-color: #f0f0f0;
+}
+
+.employee-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #555;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #ddd;
+}
+
+.employee-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.employee-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.employee-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.employee-table td {
+  padding: 12px 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+.employee-table .actions {
+  display: flex;
+  gap: 8px;
+}
+
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  background-color: white;
+}
