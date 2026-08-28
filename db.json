@@ -2,7 +2,7 @@
   "employees": [
     {
       "id": "3",
-      "name": "Terry Johnson",
+      "name": "Terry Mansonyf",
       "email": "michael.johnson@example.com",
       "department": "Sales",
       "position": "Sales Executive",
@@ -10,7 +10,7 @@
     },
     {
       "id": "4",
-      "name": "Sarah Williams",
+      "name": "Sarah Willy",
       "email": "sarah.williams@example.com",
       "department": "HR",
       "position": "HR Manager",
@@ -18,7 +18,7 @@
     },
     {
       "id": "5",
-      "name": "David Brown",
+      "name": "David Brownrr",
       "email": "david.brown@example.com",
       "department": "Finance",
       "position": "Financial Analyst",
@@ -79,6 +79,14 @@
       "position": "Dev",
       "salary": 200000,
       "id": "StRnu2dwOyU"
+    },
+    {
+      "name": "ffff",
+      "email": "ffff@hhhhh.com",
+      "department": "Marketing",
+      "position": "Sales Executive",
+      "salary": 4444,
+      "id": "UxHLq4Ohoo8"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

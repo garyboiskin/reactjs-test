@@ -16,6 +16,24 @@ Stop the services with:
 docker compose down
 ```
 
+## Kubernetes
+
+Build the images in an environment your Kubernetes cluster can access:
+
+```bash
+docker build -t employee-app:v1 .
+docker build -t employee-mock-api:latest -f Dockerfile.mock .
+```
+
+Apply the frontend and mock API manifests:
+
+```bash
+kubectl apply -k kubernetes
+kubectl port-forward service/employee-app 8080:80
+```
+
+Open ``. The frontend Service remains internal to the cluster; the Nginx proxy resolves the `mock-api` Service by name. The mock API data is stored in the pod filesystem and is reset when its pod is replaced.
+
 For local Vite development, set `VITE_API_URL=http://localhost:3000` in a `.env.local` file and run the mock server separately.
 
 # React + TypeScript + Vite
