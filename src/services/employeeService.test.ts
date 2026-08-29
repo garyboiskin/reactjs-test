@@ -19,64 +19,82 @@ afterEach(() => {
 });
 
 describe('employeeService', () => {
-  it('gets employees from the API and supports wrapped responses', async () => {
+  it('gets employees through GraphQL', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-      mockResponse({ data: [employee] }),
+      mockResponse({ data: { employees: [employee] } }),
     );
 
     await expect(employeeService.getAllEmployees()).resolves.toEqual([employee]);
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/employees'));
-  });
-
-  it('gets one employee by ID', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockResponse({ data: employee }));
-
-    await expect(employeeService.getEmployeeById(7)).resolves.toEqual(employee);
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/employees/7'));
-  });
-
-  it('gets the employee with the maximum salary', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockResponse({ data: employee }));
-
-    await expect(employeeService.getEmployeeWithMaxSalary()).resolves.toEqual(employee);
     expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining('/employees/employeewithmaxsalary'),
+      expect.stringContaining('/graphql'),
+      expect.objectContaining({ method: 'POST', body: expect.stringContaining('employees') }),
     );
   });
 
-  it('creates an employee with a JSON POST request', async () => {
+  it('gets one employee by ID', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      mockResponse({ data: { employee } }),
+    );
+
+    await expect(employeeService.getEmployeeById(7)).resolves.toEqual(employee);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/graphql'),
+      expect.objectContaining({ method: 'POST', body: expect.stringContaining('GetEmployee') }),
+    );
+  });
+
+  it('gets the employee with the maximum salary', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      mockResponse({ data: { employeeWithMaxSalary: employee } }),
+    );
+
+    await expect(employeeService.getEmployeeWithMaxSalary()).resolves.toEqual(employee);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/graphql'),
+      expect.objectContaining({ method: 'POST', body: expect.stringContaining('employeeWithMaxSalary') }),
+    );
+  });
+
+  it('creates an employee through a GraphQL mutation', async () => {
     const newEmployee = { ...employee, id: undefined };
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockResponse(employee));
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      mockResponse({ data: { createEmployee: employee } }),
+    );
 
     await expect(employeeService.createEmployee(newEmployee)).resolves.toEqual(employee);
     expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining('/employees'),
+      expect.stringContaining('/graphql'),
       expect.objectContaining({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newEmployee),
+        body: expect.stringContaining('CreateEmployee'),
       }),
     );
   });
 
-  it('updates an employee with a JSON PUT request', async () => {
+  it('updates an employee through a GraphQL mutation', async () => {
     const changes = { position: 'Chief Engineer' };
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockResponse(employee));
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      mockResponse({ data: { updateEmployee: employee } }),
+    );
 
     await expect(employeeService.updateEmployee(7, changes)).resolves.toEqual(employee);
     expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining('/employees/7'),
-      expect.objectContaining({ method: 'PUT', body: JSON.stringify(changes) }),
+      expect.stringContaining('/graphql'),
+      expect.objectContaining({ method: 'POST', body: expect.stringContaining('UpdateEmployee') }),
     );
   });
 
-  it('deletes an employee with a DELETE request', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockResponse(null));
+  it('deletes an employee through a GraphQL mutation', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      mockResponse({ data: { deleteEmployee: '7' } }),
+    );
 
     await expect(employeeService.deleteEmployee(7)).resolves.toBeUndefined();
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/employees/7'), {
-      method: 'DELETE',
-    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/graphql'),
+      expect.objectContaining({ method: 'POST', body: expect.stringContaining('DeleteEmployee') }),
+    );
   });
 
   it('throws an HTTP error for unsuccessful responses', async () => {
