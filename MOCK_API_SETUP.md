@@ -137,7 +137,7 @@ The data is stored in `db.json` - you can:
 
 The API endpoint is configured in `.env.local`:
 ```bash
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3003
 ```
 
 Change this to use a different backend!

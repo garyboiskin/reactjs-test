@@ -35,6 +35,15 @@ describe('employeeService', () => {
     expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/employees/7'));
   });
 
+  it('gets the employee with the maximum salary', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockResponse({ data: employee }));
+
+    await expect(employeeService.getEmployeeWithMaxSalary()).resolves.toEqual(employee);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/employees/employeewithmaxsalary'),
+    );
+  });
+
   it('creates an employee with a JSON POST request', async () => {
     const newEmployee = { ...employee, id: undefined };
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockResponse(employee));

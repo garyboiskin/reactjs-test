@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import type { Employee } from '../types/Employee';
 import EmployeeForm from './EmployeeForm';
 import EmployeeList from './EmployeeList';
@@ -64,16 +65,21 @@ export default function EmployeeManager() {
     <div className="employee-manager">
       <div className="manager-header">
         <h1>Employee Management</h1>
-        <button
-          onClick={() => {
-            setEditingEmployee(null);
-            setShowForm(!showForm);
-          }}
-          className="btn btn-primary"
-          disabled={isLoading}
-        >
-          {showForm ? 'Cancel' : '+ Add Employee'}
-        </button>
+        <div className="manager-actions">
+          <Link className="btn btn-secondary" to="/employees/max-salary">
+            View Highest Salary
+          </Link>
+          <button
+            onClick={() => {
+              setEditingEmployee(null);
+              setShowForm(!showForm);
+            }}
+            className="btn btn-primary"
+            disabled={isLoading}
+          >
+            {showForm ? 'Cancel' : '+ Add Employee'}
+          </button>
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}

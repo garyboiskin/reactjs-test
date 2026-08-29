@@ -3,6 +3,7 @@ import type { Employee } from '../types/Employee';
 import reducer, {
   addEmployee,
   deleteEmployee,
+  fetchEmployeeWithMaxSalary,
   fetchEmployees,
   updateEmployee,
 } from './employeeSlice';
@@ -24,6 +25,16 @@ describe('employee reducer', () => {
     );
 
     expect(state).toEqual({ employees: [employee], isLoading: false, error: null });
+  });
+
+  it('updates an existing employee from a maximum-salary request', () => {
+    const maxSalaryEmployee = { ...employee, salary: 150000 };
+    const state = reducer(
+      { employees: [employee], isLoading: true, error: null },
+      fetchEmployeeWithMaxSalary.fulfilled(maxSalaryEmployee, 'request-max-salary'),
+    );
+
+    expect(state).toEqual({ employees: [maxSalaryEmployee], isLoading: false, error: null });
   });
 
   it('adds, updates, and deletes employees from fulfilled requests', () => {

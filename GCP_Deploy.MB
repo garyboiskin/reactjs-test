@@ -1,0 +1,125 @@
+# Deploy to Google Kubernetes Engine
+
+This guide deploys Employee Management to a Google Kubernetes Engine (GKE) Autopilot cluster. It stores the application images in Artifact Registry and exposes only the frontend publicly. The mock API remains private inside the cluster.
+
+## Prerequisites
+
+Install and authenticate the Google Cloud CLI, Docker, and kubectl. You need a Google Cloud project with billing enabled.
+
+```bash
+gcloud auth login
+gcloud auth application-default login
+```
+
+Set the following values for your environment:
+
+```bash
+export PROJECT_ID="your-gcp-project-id"
+export REGION="us-central1"
+export REPOSITORY="employee-app"
+export CLUSTER="employee-cluster"
+export VERSION="v1"
+
+gcloud config set project "$PROJECT_ID"
+```
+
+## Enable GCP services
+
+```bash
+gcloud services enable container.googleapis.com artifactregistry.googleapis.com
+```
+
+## Create the Artifact Registry repository
+
+Run this once per project and region:
+
+```bash
+gcloud artifacts repositories create "$REPOSITORY" \
+  --repository-format=docker \
+  --location="$REGION" \
+  --description="Employee Management container images"
+
+gcloud auth configure-docker "$REGION-docker.pkg.dev"
+```
+
+## Build and publish images
+
+```bash
+export IMAGE_PREFIX="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY"
+
+docker build -t "$IMAGE_PREFIX/employee-app:$VERSION" .
+docker push "$IMAGE_PREFIX/employee-app:$VERSION"
+
+docker build -t "$IMAGE_PREFIX/employee-mock-api:$VERSION" -f Dockerfile.mock .
+docker push "$IMAGE_PREFIX/employee-mock-api:$VERSION"
+```
+
+Use a new version tag for every release, such as `v2`. Do not reuse `latest` for deployments.
+
+## Create and connect to GKE
+
+Create an Autopilot cluster, or skip the creation command when using an existing cluster:
+
+```bash
+gcloud container clusters create-auto "$CLUSTER" --region="$REGION"
+
+gcloud container clusters get-credentials "$CLUSTER" --region="$REGION"
+kubectl cluster-info
+```
+
+## Configure the manifests
+
+Update the `image` fields in `kubernetes/app.yaml` and `kubernetes/mock-api.yaml` before deployment:
+
+```yaml
+# kubernetes/app.yaml
+image: REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/employee-app:VERSION
+
+# kubernetes/mock-api.yaml
+image: REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/employee-mock-api:VERSION
+```
+
+Replace `REGION`, `PROJECT_ID`, `REPOSITORY`, and `VERSION` with the values used above. Keep the mock API Service name as `mock-api`; the Nginx frontend proxies `/api` requests to that internal DNS name.
+
+Change the frontend Service in `kubernetes/app.yaml` from `ClusterIP` to `LoadBalancer`:
+
+```yaml
+type: LoadBalancer
+```
+
+Leave the mock API Service as `ClusterIP` so it is not publicly exposed.
+
+## Deploy and verify
+
+```bash
+kubectl apply -k kubernetes
+kubectl rollout status deployment/employee-app
+kubectl rollout status deployment/mock-api
+kubectl get pods
+kubectl get service employee-app --watch
+```
+
+Wait for `employee-app` to receive an `EXTERNAL-IP`, then open `http://EXTERNAL-IP` in a browser. Press `Ctrl+C` to stop watching the Service without affecting the deployment.
+
+## Update a release
+
+Build and push both images using a new version tag, update the two image values in the manifests, then apply the changes:
+
+```bash
+kubectl apply -k kubernetes
+kubectl rollout status deployment/employee-app
+kubectl rollout status deployment/mock-api
+```
+
+## Remove the application
+
+```bash
+kubectl delete -k kubernetes
+```
+
+To avoid ongoing charges, delete resources that are no longer needed:
+
+```bash
+gcloud container clusters delete "$CLUSTER" --region="$REGION"
+gcloud artifacts repositories delete "$REPOSITORY" --location="$REGION"
+```

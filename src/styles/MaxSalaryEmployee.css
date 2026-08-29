@@ -1,0 +1,47 @@
+.max-salary-employee {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.max-salary-employee h1 {
+  color: #333;
+  margin: 16px 0 24px;
+}
+
+.back-link {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.employee-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+  padding: 24px;
+}
+
+.employee-card h2 {
+  margin-top: 0;
+}
+
+.employee-card dl {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+
+.employee-card dt {
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.employee-card dd {
+  margin: 4px 0 0;
+}

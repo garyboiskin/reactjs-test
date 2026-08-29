@@ -18,6 +18,15 @@
   font-size: 28px;
 }
 
+.manager-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.manager-actions a {
+  text-decoration: none;
+}
+
 .manager-content {
   display: grid;
   grid-template-columns: 1fr;
@@ -69,6 +78,10 @@
 
   .manager-header .btn {
     width: 100%;
+  }
+
+  .manager-actions {
+    flex-direction: column;
   }
 
   .employee-table {

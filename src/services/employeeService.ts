@@ -1,9 +1,26 @@
 import type { Employee } from '../types/Employee';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-const EMPLOYEES_ENDPOINT = `${API_BASE_URL}/employees`;
+const EMPLOYEES_ENDPOINT = `${API_BASE_URL}/api/employees`;
 
 class EmployeeService {
+  /*
+  * Fetch employee with max salary   
+  */
+  async getEmployeeWithMaxSalary(): Promise<Employee> {
+    try {
+      const response = await fetch(`${EMPLOYEES_ENDPOINT}/employeewithmaxsalary`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.data || data || null;
+    } catch (error) {
+      console.error('Error fetching employee with max salary:', error);
+      throw error;
+    }
+  }
+
   /**
    * Fetch all employees from the API
    */
