@@ -1,0 +1,33 @@
+.login-page {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.login-form {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  max-width: 400px;
+  padding: 32px;
+  text-align: left;
+  width: 100%;
+}
+
+.login-form h1 {
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.login-form > p {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.login-submit {
+  width: 100%;
+}

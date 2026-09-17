@@ -45,6 +45,18 @@ export const fetchEmployeeWithMaxSalary = createAsyncThunk<
   }
 });
 
+export const fetchEmployeeWithMinSalary = createAsyncThunk<
+  Employee,
+  void,
+  { rejectValue: string }
+>('employees/fetchEmployeeWithMinSalary', async (_, { rejectWithValue }) => {
+  try {
+    return await employeeService.getEmployeeWithMinSalary();
+  } catch (error) {
+    return rejectWithValue(getErrorMessage(error, 'Failed to fetch employee with minimum salary'));
+  }
+});
+
 export const addEmployee = createAsyncThunk<
   Employee,
   Omit<Employee, 'id'>,
@@ -163,6 +175,24 @@ const employeeSlice = createSlice({
       .addCase(fetchEmployeeWithMaxSalary.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? 'Failed to fetch employee with max salary';
+      })
+      .addCase(fetchEmployeeWithMinSalary.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchEmployeeWithMinSalary.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const minSalaryEmployee = action.payload;
+        const index = state.employees.findIndex((employee) => employee.id === minSalaryEmployee.id);
+        if (index !== -1) {
+          state.employees[index] = minSalaryEmployee;
+        } else {
+          state.employees.push(minSalaryEmployee);
+        }
+      })
+      .addCase(fetchEmployeeWithMinSalary.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload ?? 'Failed to fetch employee with minimum salary';
       });
   },
 });

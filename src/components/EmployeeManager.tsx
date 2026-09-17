@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { Employee } from '../types/Employee';
 import EmployeeForm from './EmployeeForm';
 import EmployeeList from './EmployeeList';
 import '../styles/EmployeeManager.css';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store/store';
+import authService from '../services/authService';
 import {
   addEmployee,
   deleteEmployee,
@@ -15,6 +16,7 @@ import {
 
 export default function EmployeeManager() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { employees, isLoading, error } = useSelector((state: RootState) => state.employees);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -61,13 +63,27 @@ export default function EmployeeManager() {
     setEditingEmployee(null);
   };
 
+  const handleLogout = () => {
+    authService.logout();
+    navigate('/login', { replace: true });
+  };
+
   return (
     <div className="employee-manager">
       <div className="manager-header">
         <h1>Employee Management</h1>
+      </div>
+
+      {error && <div className="error-message">{error}</div>}
+
+      <div className="manager-layout">
+        <aside className="manager-navigation" aria-label="Employee management actions">
         <div className="manager-actions">
           <Link className="btn btn-secondary" to="/employees/max-salary">
             View Highest Salary
+          </Link>
+          <Link className="btn btn-secondary" to="/employees/min-salary">
+            View Lowest Salary
           </Link>
           <button
             onClick={() => {
@@ -79,12 +95,13 @@ export default function EmployeeManager() {
           >
             {showForm ? 'Cancel' : '+ Add Employee'}
           </button>
+          <button type="button" onClick={handleLogout} className="btn btn-secondary">
+            Log out
+          </button>
         </div>
-      </div>
+        </aside>
 
-      {error && <div className="error-message">{error}</div>}
-
-      <div className="manager-content">
+        <div className="manager-content">
         {showForm && (
           <div className="form-section">
             <EmployeeForm
@@ -103,6 +120,7 @@ export default function EmployeeManager() {
             onDelete={handleDeleteEmployee}
             isLoading={isLoading}
           />
+        </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import type { Employee } from '../types/Employee';
+import authService from './authService';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`;
@@ -11,9 +12,13 @@ interface GraphQLResponse<T> {
 const EMPLOYEE_FIELDS = 'id name email department position salary';
 
 async function requestGraphQL<T>(query: string, variables?: Record<string, unknown>): Promise<T> {
+  const token = authService.getToken();
   const response = await fetch(GRAPHQL_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify({ query, variables }),
   });
 
@@ -42,6 +47,27 @@ class EmployeeService {
       return data.employeeWithMaxSalary;
     } catch (error) {
       console.error('Error fetching employee with max salary:', error);
+      throw error;
+    }
+  }
+
+  async getEmployeeWithMinSalary(): Promise<Employee> {
+    try {
+      const token = authService.getToken();
+      const response = await fetch(`${API_BASE_URL}/api/employees/min-salary`, {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.data ?? data;
+    } catch (error) {
+      console.error('Error fetching employee with minimum salary:', error);
       throw error;
     }
   }

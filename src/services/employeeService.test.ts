@@ -55,6 +55,16 @@ describe('employeeService', () => {
     );
   });
 
+  it('gets the employee with the minimum salary from the REST endpoint', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockResponse(employee));
+
+    await expect(employeeService.getEmployeeWithMinSalary()).resolves.toEqual(employee);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/api/employees/min-salary'),
+      expect.objectContaining({ headers: {} }),
+    );
+  });
+
   it('creates an employee through a GraphQL mutation', async () => {
     const newEmployee = { ...employee, id: undefined };
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(

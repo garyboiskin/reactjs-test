@@ -4,6 +4,7 @@ import reducer, {
   addEmployee,
   deleteEmployee,
   fetchEmployeeWithMaxSalary,
+  fetchEmployeeWithMinSalary,
   fetchEmployees,
   updateEmployee,
 } from './employeeSlice';
@@ -35,6 +36,20 @@ describe('employee reducer', () => {
     );
 
     expect(state).toEqual({ employees: [maxSalaryEmployee], isLoading: false, error: null });
+  });
+
+  it('adds a new employee from a minimum-salary request', () => {
+    const minSalaryEmployee = { ...employee, id: 2, salary: 50000 };
+    const state = reducer(
+      { employees: [employee], isLoading: true, error: null },
+      fetchEmployeeWithMinSalary.fulfilled(minSalaryEmployee, 'request-min-salary'),
+    );
+
+    expect(state).toEqual({
+      employees: [employee, minSalaryEmployee],
+      isLoading: false,
+      error: null,
+    });
   });
 
   it('adds, updates, and deletes employees from fulfilled requests', () => {

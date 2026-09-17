@@ -5,11 +5,7 @@
 }
 
 .manager-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 32px;
-  gap: 16px;
 }
 
 .manager-header h1 {
@@ -18,8 +14,20 @@
   font-size: 28px;
 }
 
+.manager-layout {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 180px minmax(0, 1fr);
+}
+
+.manager-navigation {
+  border-right: 1px solid #ddd;
+  padding-right: 24px;
+}
+
 .manager-actions {
   display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
@@ -68,15 +76,24 @@
   }
 
   .manager-header {
-    flex-direction: column;
-    align-items: stretch;
+    margin-bottom: 24px;
   }
 
   .manager-header h1 {
     font-size: 24px;
   }
 
-  .manager-header .btn {
+  .manager-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-navigation {
+    border-bottom: 1px solid #ddd;
+    border-right: 0;
+    padding: 0 0 16px;
+  }
+
+  .manager-navigation .btn {
     width: 100%;
   }
 
